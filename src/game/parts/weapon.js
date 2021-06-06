@@ -1,12 +1,17 @@
+//@ts-check
 export class Weapon {
   constructor() {}
   initializeState() {
     this.state = {
       target: null,
+      reload: 0, // all weapons come ready to fire
+      // baseStat overrides the following
+      damage: 0,
+      range: 0,
+      accuracy: 0,
+      numShots: 0,
       ...this.baseStat,
     };
-    // all weapons come ready to fire
-    this.state.reload = 0;
   }
 
   // defaults
