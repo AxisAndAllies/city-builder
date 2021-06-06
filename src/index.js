@@ -1,20 +1,57 @@
 import { fabric } from 'fabric';
-import { Game } from './game/game';
-
-// confetti.create(document.getElementById('canvas'), {
-//   resize: true,
-//   useWorker: true,
-// })({ particleCount: 200, spread: 200 });
+import { Game } from './game';
+import Vec from 'fast-vector';
 
 let canvas = new fabric.Canvas('canvas');
 canvas.selection = false;
+canvas.on('mouse:wheel', function (opt) {
+  let delta = opt.e.deltaY;
+  let zoom = canvas.getZoom();
+  zoom *= 0.999 ** delta;
+  if (zoom > 20) zoom = 20;
+  if (zoom < 0.01) zoom = 0.01;
+  canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
+  opt.e.preventDefault();
+  opt.e.stopPropagation();
+});
+
+canvas.on('mouse:down', function (opt) {
+  let evt = opt.e;
+  opt.e.preventDefault();
+  opt.e.stopPropagation();
+  if (evt.altKey === true) {
+    this.isDragging = true;
+    this.selection = false;
+    this.lastPosX = evt.clientX;
+    this.lastPosY = evt.clientY;
+  }
+});
+canvas.on('mouse:move', function (opt) {
+  if (this.isDragging) {
+    let e = opt.e;
+    let vpt = this.viewportTransform;
+    vpt[4] += e.clientX - this.lastPosX;
+    vpt[5] += e.clientY - this.lastPosY;
+    this.requestRenderAll();
+    this.lastPosX = e.clientX;
+    this.lastPosY = e.clientY;
+  }
+});
+canvas.on('mouse:up', function (opt) {
+  // on mouse up we want to recalculate new interaction
+  // for all objects, so we call setViewportTransform
+  this.setViewportTransform(this.viewportTransform);
+  this.isDragging = false;
+  this.selection = true;
+});
+
 let rect = new fabric.Rect({
   top: 100,
   left: 100,
   width: 90,
   height: 40,
   fill: '#a3e',
-  selectable: false,
+  // selectable: false,
 });
 let r2 = new fabric.Rect({
   top: 400,
@@ -22,7 +59,7 @@ let r2 = new fabric.Rect({
   width: 90,
   height: 40,
   fill: '#4ea',
-  selectable: false,
+  // selectable: false,
 });
 
 console.log(rect.originX, rect.originY);

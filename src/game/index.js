@@ -1,32 +1,35 @@
 //@ts-check
-import { Laser, MissileLauncher, RocketLauncher } from './block/weapon';
-
 export class Game {
   constructor() {
     this.enemies = [];
+    /** @type {any[]} */
     this.blocks = [];
   }
   start() {
     this.lastUpdated = Date.now();
     this.timer = setInterval(() => {
       let now = Date.now();
+      // @ts-ignore
       this.loop(now - this.lastUpdated);
       this.lastUpdated = now;
     }, 100);
   }
 
+  /**
+   * @param {number} elapsedMs
+   */
   loop(elapsedMs) {
-    this.ships.forEach((s) => {
+    this.blocks.forEach((s) => {
       s.tick(elapsedMs);
     });
     // remove dead ships
-    this.ships = this.ships.filter((s) => s.state.health > 0);
+    this.blocks = this.blocks.filter((s) => s.state.health > 0);
     if (Math.random() < 0.02)
       console.log(
-        this.ships,
-        this.ships.map((s) => s.state.health),
+        this.blocks,
+        this.blocks.map((s) => s.state.health),
       );
-    if (this.ships.length == 1) {
+    if (this.blocks.length == 1) {
       this.exit();
     }
   }
