@@ -1,24 +1,10 @@
-import { Laser, MissileLauncher, RocketLauncher } from './parts/weapon';
-import { Destroyer, Gunship } from './ship';
+//@ts-check
+import { Laser, MissileLauncher, RocketLauncher } from './block/weapon';
 
 export class Game {
   constructor() {
-    this.ships = [];
-    let a = new Destroyer();
-    a.addEquipment(new MissileLauncher());
-    a.addEquipment(new RocketLauncher());
-    // a.addEquipment(new LightShield());
-
-    let b = new Gunship();
-    b.addEquipment(new Laser());
-    // b.addEquipment(new Laser());
-    // b.addEquipment(new MediumShield());
-
-    a.setTarget(b);
-    b.setTarget(a);
-
-    this.ships.push(a);
-    this.ships.push(b);
+    this.enemies = [];
+    this.blocks = [];
   }
   start() {
     this.lastUpdated = Date.now();

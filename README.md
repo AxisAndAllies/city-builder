@@ -1,6 +1,6 @@
-# Spaceship-game
+# City-builder
 
-Spaceship game inspired by https://cosmoteer.net/ and some other Android spaceship RTS.
+Factorio-like game inspired by [Vectorio](https://store.steampowered.com/app/1462470/Vectorio__Early_Access/).
 
 ### About
 
