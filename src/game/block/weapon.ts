@@ -2,6 +2,7 @@
 import { Block } from '.';
 import Vec from 'fast-vector';
 import { Bullet, Shot } from '../shot';
+import { Enemy } from '../enemy';
 
 type WeaponStat = {
     health: number;
@@ -41,6 +42,10 @@ export abstract class Weapon extends Block {
 
   get readyToFire() {
     return this.state.reload == 0;
+  }
+
+  findTarget(enemies: Enemy[]) {
+    
   }
 
   tick(ms: number) {
