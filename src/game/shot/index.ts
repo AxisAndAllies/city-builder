@@ -1,14 +1,14 @@
 import Vec from 'fast-vector';
 
-export enum BulletType {
+export enum ShotType {
   BULLET,
 }
 const dmgStat = {
-  [BulletType.BULLET]: 5,
+  [ShotType.BULLET]: 5,
 };
 
 const speedStat = {
-  [BulletType.BULLET]: 5,
+  [ShotType.BULLET]: 5,
 };
 
 export abstract class Shot {
@@ -17,7 +17,7 @@ export abstract class Shot {
     initialPos: Vec,
     angleRadians: number,
     lifespanMs: number,
-    bulletType: BulletType,
+    bulletType: ShotType,
   ) {
     const vel = new Vec(Math.cos(angleRadians), Math.sin(angleRadians)).mul(
       speedStat[bulletType],
@@ -36,6 +36,6 @@ export abstract class Shot {
 }
 export class Bullet extends Shot {
   constructor(initialPos: Vec, angleRadians: number, lifespanMs: number) {
-    super(initialPos, angleRadians, lifespanMs, BulletType.BULLET);
+    super(initialPos, angleRadians, lifespanMs, ShotType.BULLET);
   }
 }

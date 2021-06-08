@@ -2,6 +2,10 @@
 
 Factorio-like game inspired by [Vectorio](https://store.steampowered.com/app/1462470/Vectorio__Early_Access/).
 
+### Optimization places
+
+- prevent creating new Shot obj per shot, recycle shot obj pool or use raw arrays?
+
 ### About
 
 fabricJS gotchas - http://fabricjs.com/fabric-gotchas
