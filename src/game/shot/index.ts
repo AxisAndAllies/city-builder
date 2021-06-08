@@ -11,7 +11,7 @@ const speedStat = {
   [BulletType.BULLET]: 5,
 };
 
-export class Shot {
+export abstract class Shot {
   state: { vel: Vec; pos: Vec; lifespanMs: number; damage: number };
   constructor(
     initialPos: Vec,
@@ -32,5 +32,10 @@ export class Shot {
   tick(ms: number) {
     this.state.pos = this.state.pos.add(this.state.vel.div(ms / 1000));
     this.state.lifespanMs -= ms;
+  }
+}
+export class Bullet extends Shot {
+  constructor(initialPos: Vec, angleRadians: number, lifespanMs: number) {
+    super(initialPos, angleRadians, lifespanMs, BulletType.BULLET);
   }
 }

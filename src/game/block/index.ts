@@ -1,7 +1,14 @@
-export class Block {
-  state: any;
-  constructor(baseStats: { health: number }) {
-    this.state.health = baseStats.health;
+import Vec from 'fast-vector';
+export abstract class Block {
+  state: {
+    health: number;
+    pos: Vec;
+  };
+  constructor(health: number, pos: Vec) {
+    this.state = {
+      health,
+      pos,
+    };
   }
   takeDamage(dmg: number) {
     this.state.health -= dmg;
@@ -17,5 +24,7 @@ export class Block {
   }
 }
 export class Wall extends Block {}
+
+export class PowerBlock extends Block {}
 export * from './weapon';
 export * from './resource';

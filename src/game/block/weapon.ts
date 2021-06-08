@@ -1,31 +1,43 @@
-import { Block } from '.';
-
 //@ts-check
-export class Weapon extends Block {
-  state: {
-    target: null;
-    reload: number; // all weapons come ready to fire
-    // baseStat overrides the following
+import { Block } from '.';
+import Vec from 'fast-vector';
+import { Bullet, Shot } from '../shot';
+
+type WeaponStat = {
+    health: number;
+    reload: number;
     damage: number;
     range: number;
-    accuracy: number;
+    bulletSpeed: number;
+    spreadRadians: number;
     numShots: number;
-  };
-  constructor() {
-    this.state = {
-      target: null,
-      reload: 0, // all weapons come ready to fire
-      // baseStat overrides the following
-      damage: 0,
-      range: 0,
-      accuracy: 0,
-      numShots: 0,
-      ...this.baseStat,
-    };
   }
 
-  // defaults
-  baseStat = {};
+export abstract class Weapon extends Block {
+  // current state
+  state: {
+    pos: Vec;
+    target: null;
+  } & WeaponStat;
+  // base stats
+  baseStat:WeaponStat  = {
+    health: 0,
+    reload: 0,
+    damage: 0,
+    range: 0,
+    bulletSpeed: 0,
+    spreadRadians: 0,
+    numShots: 0,
+  };
+  constructor(pos: Vec) {
+    super(0, pos);
+    this.state = {
+      pos,
+      target: null,
+      ...this.baseStat,
+      reload: 0, // all weapons come ready to fire
+    };
+  }
 
   get readyToFire() {
     return this.state.reload == 0;
@@ -34,23 +46,20 @@ export class Weapon extends Block {
   tick(ms: number) {
     this.state.reload = Math.max(this.state.reload - ms, 0);
   }
-  fire() {
+  fire(targetPos: Vec) {
     // reset reload
     this.state.reload = this.baseStat.reload;
 
-    let shots = [];
+    let shots: Shot[] = [];
     for (let i = 0; i < this.state.numShots; i++) {
-      if (Math.random() > this.state.accuracy) {
-        console.log('missed');
-        continue;
-      }
-      shots.push(this.state.damage);
+      shots.push(new Bullet(this.state.pos, targetPos.sub(this.state.pos).angle(), this.state.range/this.);
     }
     // returns damage
-    console.log(shots);
     return shots;
   }
 }
+
+export class 
 
 // export class Laser extends Weapon {
 //   constructor() {
@@ -62,7 +71,7 @@ export class Weapon extends Block {
 //     damage: 7,
 //     reload: 1000, // in reality fires every 1 sec lol
 //     range: 10,
-//     accuracy: 1.0,
+//     spreadRadians: 1.0,
 //     numShots: 1,
 //   };
 // }
@@ -77,7 +86,7 @@ export class Weapon extends Block {
 //     damage: 24,
 //     reload: 5000,
 //     range: 15,
-//     accuracy: 0.8,
+//     spreadRadians: 0.8,
 //     numShots: 1,
 //   };
 // }
@@ -92,7 +101,7 @@ export class Weapon extends Block {
 //     damage: 8,
 //     reload: 3000,
 //     range: 10,
-//     accuracy: 0.5,
+//     spreadRadians: 0.5,
 //     numShots: 3,
 //   };
 // }
@@ -107,7 +116,7 @@ export class Weapon extends Block {
 //     damage: 18,
 //     reload: 2000,
 //     range: 15,
-//     accuracy: 0.9,
+//     spreadRadians: 0.9,
 //     numShots: 1,
 //   };
 // }
@@ -123,7 +132,7 @@ export class Weapon extends Block {
 //     damage: 20,
 //     reload: 15000,
 //     range: 6,
-//     accuracy: 0.6,
+//     spreadRadians: 0.6,
 //     numShots: 12,
 //   };
 // }
