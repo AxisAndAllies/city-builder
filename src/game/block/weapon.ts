@@ -81,7 +81,7 @@ export abstract class Weapon extends Block {
       this.state.reload <= 0
     ) {
       // console.log(this.id, " fired a shot at ", targ);
-      this.tryFire();
+      return this.tryFire();
     }
   }
   turnTowards(ang: number, ms: number) {
@@ -101,7 +101,7 @@ export abstract class Weapon extends Block {
     }
   }
 
-  tryFire() {
+  private tryFire() {
     if (this.state.reload > 0){
       return;
     }

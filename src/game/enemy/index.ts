@@ -29,6 +29,12 @@ export abstract class Enemy {
   tick(ms: number) {
     this.state.pos = this.state.pos.add(this.state.vel.div(ms / 1000));
   }
+  render() {
+    return;
+  }
+  isDead() {
+    return this.state.health <= 0;
+  }
 }
 
 export class SimpleEnemy extends Enemy {
