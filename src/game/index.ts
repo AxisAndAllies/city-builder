@@ -1,11 +1,14 @@
-import { Block, Weapon } from './block';
+import { Block } from './block';
+import { Weapon } from './block/weapon';
 import { Enemy } from './enemy';
+import { Shot } from './shot';
 
 //@ts-check
 export class Game {
   state: {
     enemies: Enemy[];
     blocks: Block[];
+    shots: Shot[];
     lastUpdated: number;
     timer: number;
   };
@@ -14,6 +17,7 @@ export class Game {
     this.state = {
       enemies: [],
       blocks: [],
+      shots: [],
       lastUpdated: Date.now(),
       timer: 0,
     };
@@ -24,6 +28,17 @@ export class Game {
       this.loop(now - this.state.lastUpdated);
       this.state.lastUpdated = now;
     }, 100);
+
+    requestAnimationFrame(this.render);
+  }
+  addBlock(block: Block) {
+    this.state.blocks.push(block);
+  }
+  addEnemy(enemy: Enemy) {
+    this.state.enemies.push(enemy);
+  }
+  addShots(shots: Shot[]) {
+    shots && this.state.shots.push(...shots);
   }
 
   /**
@@ -37,6 +52,20 @@ export class Game {
       s.tick(elapsedMs);
     });
     this.state.blocks = this.state.blocks.filter((s) => !s.isDead());
+  }
+
+  render() {
+    //draw
+    this.state.blocks.map((b) => {
+      b.render();
+    });
+    this.state.shots.map((s) => {
+      s.render();
+    });
+    this.state.enemies.map((e) => {
+      e.render();
+    });
+    window.requestAnimationFrame(this.render);
   }
 
   exit() {

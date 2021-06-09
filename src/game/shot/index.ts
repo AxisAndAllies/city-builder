@@ -33,6 +33,7 @@ export abstract class Shot {
     this.state.pos = this.state.pos.add(this.state.vel.div(ms / 1000));
     this.state.lifespanMs -= ms;
   }
+  render() {}
 }
 export class Bullet extends Shot {
   constructor(initialPos: Vec, angleRadians: number, lifespanMs: number) {

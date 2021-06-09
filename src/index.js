@@ -1,6 +1,8 @@
 import { fabric } from 'fabric';
 import { Game } from './game';
 import Vec from 'fast-vector';
+import { Cannon } from './game/block/weapon';
+import { SimpleEnemy } from './game/enemy';
 
 let canvas = new fabric.Canvas('canvas');
 canvas.selection = false;
@@ -114,4 +116,6 @@ canvas.backgroundColor = '#333';
 console.log('init');
 
 let game = new Game();
+game.addBlock(new Cannon(new Vec(500, 500)));
+game.addEnemy(new SimpleEnemy(new Vec(100, 100), new Vec(1.1, 1)));
 game.start();

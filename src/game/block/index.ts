@@ -1,4 +1,5 @@
 import Vec from 'fast-vector';
+
 export abstract class Block {
   state: {
     health: number;
@@ -26,5 +27,5 @@ export abstract class Block {
 export class Wall extends Block {}
 
 export class PowerBlock extends Block {}
-export * from './weapon';
-export * from './resource';
+// export * from './weapon';
+// export * from './resource';

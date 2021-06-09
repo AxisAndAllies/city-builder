@@ -3,28 +3,28 @@ import { Block } from '.';
 import Vec from 'fast-vector';
 import { Bullet, Shot } from '../shot';
 import { Enemy } from '../enemy';
-import { getDiffVec, getDist, getDistSq } from '../utils';
+import { getDiffVec, getDistSq } from '../utils';
 
 type WeaponStat = {
-    health: number;
-    reload: number;
-    damage: number;
-    range: number;
-    turnSpeed: number;
-    bulletSpeed: number;
-    spreadRadians: number;
-    numShots: number;
-  }
+  health: number;
+  reload: number; // millis
+  damage: number;
+  range: number;
+  turnSpeed: number; // radians per sec
+  bulletSpeed: number;
+  spreadRadians: number;
+  numShots: number;
+};
 
 export abstract class Weapon extends Block {
   // current state
   state: {
     pos: Vec;
-    orientation: number
+    orientation: number;
     target: Enemy | null;
   } & WeaponStat;
   // base stats
-  baseStat:WeaponStat  = {
+  baseStat: WeaponStat = {
     health: 0,
     reload: 0,
     damage: 0,
@@ -48,21 +48,23 @@ export abstract class Weapon extends Block {
   get readyToFire() {
     return this.state.reload == 0;
   }
-  private setTarget(enemy: Enemy){
-    this.state.target = enemy
+  private setTarget(enemy: Enemy) {
+    this.state.target = enemy;
   }
 
   findTarget(enemies: Enemy[]) {
     // optimize later lol
     // just get closest enemy for now
-    if (!enemies.length) {return;}
-    let minDistSq = getDistSq(this, enemies[0])
-    this.setTarget(enemies[0])
-    for(let i=0; i<enemies.length; i++) {
-      let d = getDistSq(this, enemies[i])
+    if (!enemies.length) {
+      return;
+    }
+    let minDistSq = getDistSq(this, enemies[0]);
+    this.setTarget(enemies[0]);
+    for (let i = 0; i < enemies.length; i++) {
+      let d = getDistSq(this, enemies[i]);
       if (d < minDistSq) {
         minDistSq = d;
-        this.setTarget(enemies[i])
+        this.setTarget(enemies[i]);
       }
     }
   }
@@ -70,14 +72,14 @@ export abstract class Weapon extends Block {
   tick(ms: number) {
     this.state.reload = Math.max(this.state.reload - ms, 0);
 
-    if (!this.state.target){
+    if (!this.state.target) {
       return;
     }
     // shoot if aligned + in range + reloaded
-    let vec = getDiffVec(this.state.target, this)
+    let vec = getDiffVec(this.state.target, this);
     if (
       Math.abs(vec.angle() - this.state.orientation) % 360 < 0.1 &&
-       vec.magnitude() < this.state.range &&
+      vec.magnitude() < this.state.range &&
       this.state.reload <= 0
     ) {
       // console.log(this.id, " fired a shot at ", targ);
@@ -102,7 +104,7 @@ export abstract class Weapon extends Block {
   }
 
   private tryFire() {
-    if (this.state.reload > 0){
+    if (this.state.reload > 0) {
       return;
     }
     // reset reload
@@ -110,15 +112,34 @@ export abstract class Weapon extends Block {
 
     let shots: Shot[] = [];
     for (let i = 0; i < this.state.numShots; i++) {
-      let ang = this.state.orientation + (Math.random() - 0.5)*this.state.spreadRadians
-      shots.push(new Bullet(this.state.pos, ang, this.state.range/this.state.bulletSpeed));
+      let ang =
+        this.state.orientation +
+        (Math.random() - 0.5) * this.state.spreadRadians;
+      shots.push(
+        new Bullet(
+          this.state.pos,
+          ang,
+          this.state.range / this.state.bulletSpeed,
+        ),
+      );
     }
     // returns damage
     return shots;
   }
 }
 
-export class 
+export class Cannon extends Weapon {
+  baseStat: WeaponStat = {
+    health: 10,
+    reload: 1000,
+    damage: 0,
+    range: 400,
+    turnSpeed: Math.PI / 2,
+    bulletSpeed: 50,
+    spreadRadians: Math.PI * 0.05,
+    numShots: 1,
+  };
+}
 
 // export class Laser extends Weapon {
 //   constructor() {

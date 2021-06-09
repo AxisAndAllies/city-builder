@@ -38,7 +38,7 @@ export abstract class Enemy {
 }
 
 export class SimpleEnemy extends Enemy {
-  baseStat = {
+  baseStat: EnemyStat = {
     health: 10,
     speed: 10,
     damage: 10,
