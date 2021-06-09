@@ -4,8 +4,13 @@ import { Game } from './game';
 import Vec from 'fast-vector';
 import { Cannon, Minigun, Shotgun } from './game/block/weapon';
 import { SimpleEnemy } from './game/enemy';
+import { Resource, ResourceType } from './game/block/resource';
 
-let canvas = new fabric.Canvas('canvas');
+const WIDTH = 1600;
+const HEIGHT = 1200;
+export const GRID_SIZE = 20;
+
+let canvas = new fabric.Canvas('canvas', { width: WIDTH, height: HEIGHT });
 canvas.selection = false;
 canvas.on('mouse:wheel', function (opt) {
   let delta = opt.e.deltaY;
@@ -119,5 +124,15 @@ let game = new Game(canvas);
 game.addBlock(new Cannon(new Vec(500, 500)));
 game.addBlock(new Minigun(new Vec(600, 300)));
 game.addBlock(new Shotgun(new Vec(400, 600)));
+for (let i = 0; i < 10; i++) {
+  let x = Math.round((Math.random() * WIDTH) / GRID_SIZE) * GRID_SIZE;
+  let y = Math.round((Math.random() * HEIGHT) / GRID_SIZE) * GRID_SIZE;
+  game.addBlock(new Resource(new Vec(x, y), 10, ResourceType.IRON));
+  for (let j = 0; j < Math.random() * 20; j++) {
+    let x2 = Math.round((Math.random() * 150 - 75) / GRID_SIZE) * GRID_SIZE + x;
+    let y2 = Math.round((Math.random() * 150 - 75) / GRID_SIZE) * GRID_SIZE + y;
+    game.addBlock(new Resource(new Vec(x2, y2), 10, ResourceType.IRON));
+  }
+}
 game.addEnemy(new SimpleEnemy(new Vec(100, 100), Math.PI / 2.9));
 game.start();

@@ -37,6 +37,13 @@ export class Game {
     }, 20);
   }
   addBlock(block: Block) {
+    if (
+      this.state.blocks.filter((b) => b.state.pos.equals(block.state.pos))
+        .length
+    ) {
+      console.log('something already here');
+      return;
+    }
     this.state.blocks.push(block);
     this.canvas.add(block.sprite);
   }

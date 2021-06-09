@@ -37,7 +37,6 @@ export abstract class Shot {
     });
   }
   tick(ms: number) {
-    console.log(this.state.pos);
     this.state.pos = this.state.pos.add(this.state.vel.mul(ms / 1000));
     this.state.lifespanMs -= ms;
   }

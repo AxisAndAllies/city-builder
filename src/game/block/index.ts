@@ -16,9 +16,9 @@ export abstract class Block {
     this.sprite = new fabric.Rect({
       left: this.state.pos.x,
       top: this.state.pos.y,
-      width: 40,
-      height: 40,
-      fill: '#4ea',
+      width: 10,
+      height: 10,
+      fill: 'white',
     });
   }
   takeDamage(dmg: number) {
