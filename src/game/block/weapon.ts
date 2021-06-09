@@ -170,6 +170,30 @@ export class Cannon extends Weapon {
   }
 }
 
+export class Shotgun extends Weapon {
+  constructor(pos: Vec) {
+    let baseStat: WeaponStat = {
+      health: 10,
+      reload: 1400,
+      damage: 4,
+      range: 240,
+      turnSpeed: Math.PI * 0.7,
+      bulletSpeed: 220,
+      spreadRadians: 0.5,
+      numShots: 9,
+    };
+    super(pos, baseStat);
+
+    this.sprite = new fabric.Rect({
+      top: this.state.pos.x,
+      left: this.state.pos.y,
+      width: 30,
+      height: 55,
+      fill: '#bb2',
+    });
+  }
+}
+
 // export class Laser extends Weapon {
 //   constructor() {
 //     super();
