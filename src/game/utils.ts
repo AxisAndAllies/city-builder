@@ -1,4 +1,7 @@
 import Vec from 'fast-vector';
+
+export const TWO_PI = 2 * Math.PI;
+
 type HasPosition = { state: { pos: Vec } };
 export function getDiffVec(from: HasPosition, to: HasPosition) {
   return to.state.pos.sub(from.state.pos);

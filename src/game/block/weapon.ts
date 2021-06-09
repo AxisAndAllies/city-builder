@@ -3,7 +3,7 @@ import { Block } from '.';
 import Vec from 'fast-vector';
 import { Bullet, Shot } from '../shot';
 import { Enemy } from '../enemy';
-import { getDiffVec, getDistSq } from '../utils';
+import { getDiffVec, getDistSq, TWO_PI } from '../utils';
 import { fabric } from 'fabric';
 
 type WeaponStat = {
@@ -73,7 +73,7 @@ export abstract class Weapon extends Block {
     this.turnTowards(vec.angle(), ms);
     if (
       // true
-      Math.abs(vec.angle() - this.state.orientation) % 360 < 0.1 &&
+      Math.abs(vec.angle() - this.state.orientation) % TWO_PI < 0.1 &&
       vec.magnitude() < this.state.range &&
       this.state.reload <= 0
     ) {
@@ -87,8 +87,8 @@ export abstract class Weapon extends Block {
     let cur_ang = this.state.orientation;
     let turn = (this.state.turnSpeed * ms) / 1000;
     let angdiff = cur_ang - angRadians;
-    if (angdiff > Math.PI) angdiff -= Math.PI * 2;
-    if (angdiff <= -Math.PI) angdiff += Math.PI * 2;
+    if (angdiff > Math.PI) angdiff -= TWO_PI;
+    if (angdiff <= -Math.PI) angdiff += TWO_PI;
 
     let minturn = Math.min(Math.abs(angdiff), turn);
     if (angdiff > 0) {
@@ -158,7 +158,7 @@ export class Cannon extends Weapon {
       reload: 1000,
       damage: 10,
       range: 400,
-      turnSpeed: Math.PI / 4,
+      turnSpeed: Math.PI / 2,
       bulletSpeed: 80,
       spreadRadians: 0.05,
       numShots: 1,
