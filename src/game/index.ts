@@ -34,7 +34,7 @@ export class Game {
       let now = Date.now();
       this.loop(now - this.state.lastUpdated);
       this.state.lastUpdated = now;
-    }, 100);
+    }, 20);
   }
   addBlock(block: Block) {
     this.state.blocks.push(block);
@@ -44,8 +44,9 @@ export class Game {
     this.state.enemies.push(enemy);
     this.canvas.add(enemy.sprite);
   }
-  addShots(shots: Shot[]) {
-    shots && this.state.shots.push(...shots);
+  addShots(shots?: Shot[]) {
+    if (!shots) return;
+    this.state.shots.push(...shots);
     shots.forEach((s) => this.canvas.add(s.sprite));
   }
 
@@ -53,8 +54,10 @@ export class Game {
     this.state.blocks.forEach((s) => {
       if (s instanceof Weapon) {
         s.findTarget(this.state.enemies);
+        this.addShots(s.tick(elapsedMs));
+      } else {
+        s.tick(elapsedMs);
       }
-      s.tick(elapsedMs);
     });
     this.state.enemies.forEach((e) => {
       e.tick(elapsedMs);
@@ -62,9 +65,11 @@ export class Game {
     this.state.shots.forEach((e) => {
       e.tick(elapsedMs);
     });
-    this.state.shots = this.state.shots.filter((s) => !s.isDead());
-    this.state.enemies = this.state.enemies.filter((s) => !s.isDead());
-    this.state.blocks = this.state.blocks.filter((s) => !s.isDead());
+    let deadFilter = (e: Block | Shot | Enemy) =>
+      e.isDead() ? this.canvas.remove(e.sprite) && false : true;
+    this.state.shots = this.state.shots.filter(deadFilter);
+    this.state.enemies = this.state.enemies.filter(deadFilter);
+    this.state.blocks = this.state.blocks.filter(deadFilter);
   }
 
   render() {

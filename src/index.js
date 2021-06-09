@@ -2,7 +2,7 @@
 import { fabric } from 'fabric';
 import { Game } from './game';
 import Vec from 'fast-vector';
-import { Cannon } from './game/block/weapon';
+import { Cannon, Minigun } from './game/block/weapon';
 import { SimpleEnemy } from './game/enemy';
 
 let canvas = new fabric.Canvas('canvas');
@@ -117,5 +117,6 @@ canvas.backgroundColor = '#333';
 
 let game = new Game(canvas);
 game.addBlock(new Cannon(new Vec(500, 500)));
+game.addBlock(new Minigun(new Vec(600, 300)));
 game.addEnemy(new SimpleEnemy(new Vec(100, 100), Math.PI / 2.9));
 game.start();

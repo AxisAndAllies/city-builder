@@ -4,6 +4,7 @@ import Vec from 'fast-vector';
 import { Bullet, Shot } from '../shot';
 import { Enemy } from '../enemy';
 import { getDiffVec, getDistSq } from '../utils';
+import { fabric } from 'fabric';
 
 type WeaponStat = {
   health: number;
@@ -70,9 +71,10 @@ export abstract class Weapon extends Block {
     // shoot if aligned + in range + reloaded
     let vec = getDiffVec(this.state.target, this);
     if (
-      Math.abs(vec.angle() - this.state.orientation) % 360 < 0.1 &&
-      vec.magnitude() < this.state.range &&
-      this.state.reload <= 0
+      true
+      // Math.abs(vec.angle() - this.state.orientation) % 360 < 0.1 &&
+      // vec.magnitude() < this.state.range &&
+      // this.state.reload <= 0
     ) {
       // console.log(this.id, " fired a shot at ", targ);
       return this.tryFire();
@@ -111,7 +113,8 @@ export abstract class Weapon extends Block {
         new Bullet(
           this.state.pos,
           ang,
-          this.state.range / this.state.bulletSpeed,
+          (this.state.range / this.state.bulletSpeed) * 1000,
+          this.state.bulletSpeed,
         ),
       );
     }
@@ -120,19 +123,50 @@ export abstract class Weapon extends Block {
   }
 }
 
+export class Minigun extends Weapon {
+  constructor(pos: Vec) {
+    let baseStat: WeaponStat = {
+      health: 10,
+      reload: 200,
+      damage: 2,
+      range: 250,
+      turnSpeed: Math.PI / 2,
+      bulletSpeed: 150,
+      spreadRadians: 0.15,
+      numShots: 1,
+    };
+    super(pos, baseStat);
+
+    this.sprite = new fabric.Rect({
+      top: this.state.pos.x,
+      left: this.state.pos.y,
+      width: 30,
+      height: 25,
+      fill: '#e2a',
+    });
+  }
+}
 export class Cannon extends Weapon {
   constructor(pos: Vec) {
     let baseStat: WeaponStat = {
       health: 10,
       reload: 1000,
-      damage: 0,
+      damage: 10,
       range: 400,
-      turnSpeed: Math.PI / 2,
-      bulletSpeed: 50,
-      spreadRadians: Math.PI * 0.05,
+      turnSpeed: Math.PI / 4,
+      bulletSpeed: 80,
+      spreadRadians: 0.05,
       numShots: 1,
     };
     super(pos, baseStat);
+
+    this.sprite = new fabric.Rect({
+      top: this.state.pos.x,
+      left: this.state.pos.y,
+      width: 30,
+      height: 45,
+      fill: '#2ae',
+    });
   }
 }
 

@@ -52,7 +52,7 @@ export class SimpleEnemy extends Enemy {
   constructor(pos: Vec, angleRadians: number) {
     let baseStat: EnemyStat = {
       health: 10,
-      speed: 100,
+      speed: 5,
       damage: 10,
     };
     super(pos, angleRadians, baseStat);
