@@ -4,6 +4,7 @@ Factorio-like game inspired by [Vectorio](https://store.steampowered.com/app/146
 
 ### Optimization places
 
+- Fabric easy perf tips: https://github.com/fabricjs/fabric.js/wiki/Optimizing-performance
 - prevent creating new Shot obj per shot, recycle shot obj pool or use raw arrays?
 
 ### About

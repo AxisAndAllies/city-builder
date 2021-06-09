@@ -106,16 +106,15 @@ let text = new fabric.Text('Hello world', {
   // angle: 15,
   selectable: false,
 });
-canvas.add(text);
+// canvas.add(text);
 
-canvas.add(rect);
-canvas.add(r2);
-canvas.add(makeLaser(rect, r2));
-canvas.add(makeLaser(r2, rect));
+// canvas.add(rect);
+// canvas.add(r2);
+// canvas.add(makeLaser(rect, r2));
+// canvas.add(makeLaser(r2, rect));
 canvas.backgroundColor = '#333';
-console.log('init');
 
-let game = new Game();
+let game = new Game(canvas);
 game.addBlock(new Cannon(new Vec(500, 500)));
 game.addEnemy(new SimpleEnemy(new Vec(100, 100), new Vec(1.1, 1)));
 game.start();

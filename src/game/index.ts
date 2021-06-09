@@ -1,19 +1,22 @@
 import { Block } from './block';
 import { Weapon } from './block/weapon';
 import { Enemy } from './enemy';
+import { fabric } from 'fabric';
 import { Shot } from './shot';
 
 //@ts-check
 export class Game {
-  state: {
+  readonly state: {
     enemies: Enemy[];
     blocks: Block[];
     shots: Shot[];
     lastUpdated: number;
     timer: number;
   };
+  readonly canvas: fabric.Canvas;
 
-  constructor() {
+  constructor(canvas: fabric.Canvas) {
+    this.canvas = canvas;
     this.state = {
       enemies: [],
       blocks: [],
@@ -23,22 +26,25 @@ export class Game {
     };
   }
   start() {
+    requestAnimationFrame(this.render);
+
     this.state.timer = setInterval(() => {
       let now = Date.now();
       this.loop(now - this.state.lastUpdated);
       this.state.lastUpdated = now;
     }, 100);
-
-    requestAnimationFrame(this.render);
   }
   addBlock(block: Block) {
     this.state.blocks.push(block);
+    this.canvas.add(block.sprite);
   }
   addEnemy(enemy: Enemy) {
     this.state.enemies.push(enemy);
+    this.canvas.add(enemy.sprite);
   }
   addShots(shots: Shot[]) {
     shots && this.state.shots.push(...shots);
+    shots.forEach((s) => this.canvas.add(s.sprite));
   }
 
   /**
@@ -55,7 +61,7 @@ export class Game {
   }
 
   render() {
-    //draw
+    //NOTE: fabric performance tips https://github.com/fabricjs/fabric.js/wiki/Optimizing-performance
     this.state.blocks.map((b) => {
       b.render();
     });

@@ -1,3 +1,4 @@
+import { fabric } from 'fabric';
 import Vec from 'fast-vector';
 import { alphanumericId } from 'short-animal-id';
 
@@ -18,6 +19,7 @@ export abstract class Enemy {
     speed: 0,
     damage: 0,
   };
+  sprite: fabric.Object;
   constructor(pos: Vec, vel: Vec) {
     this.state = {
       id: alphanumericId(8),
@@ -25,12 +27,20 @@ export abstract class Enemy {
       pos,
       ...this.baseStat,
     };
+
+    this.sprite = new fabric.Rect({
+      top: this.state.pos.x,
+      left: this.state.pos.y,
+      width: 50,
+      height: 50,
+      fill: '#aaa',
+    });
   }
   tick(ms: number) {
     this.state.pos = this.state.pos.add(this.state.vel.div(ms / 1000));
   }
   render() {
-    return;
+    this.sprite.set({ top: this.state.pos.x, left: this.state.pos.y });
   }
   isDead() {
     return this.state.health <= 0;

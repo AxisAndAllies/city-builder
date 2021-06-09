@@ -1,3 +1,4 @@
+import { fabric } from 'fabric';
 import Vec from 'fast-vector';
 
 export abstract class Block {
@@ -5,11 +6,20 @@ export abstract class Block {
     health: number;
     pos: Vec;
   };
+  sprite: fabric.Object;
   constructor(health: number, pos: Vec) {
     this.state = {
       health,
       pos,
     };
+
+    this.sprite = new fabric.Rect({
+      top: this.state.pos.x,
+      left: this.state.pos.y,
+      width: 40,
+      height: 40,
+      fill: '#4ea',
+    });
   }
   takeDamage(dmg: number) {
     this.state.health -= dmg;
@@ -21,7 +31,7 @@ export abstract class Block {
     return;
   }
   render() {
-    return;
+    this.sprite.set({ top: this.state.pos.x, left: this.state.pos.y });
   }
 }
 export class Wall extends Block {}

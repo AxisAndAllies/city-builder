@@ -7,6 +7,7 @@
     "lint": "prettier --check \"src/**/*.js\""
   },
   "dependencies": {
+    "@types/fabric": "^4.2.6",
     "fabric": "^4.5.0",
     "fast-vector": "^2.3.3",
     "short-animal-id": "^3.0.2"
