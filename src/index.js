@@ -1,3 +1,4 @@
+//@ts-check
 import { fabric } from 'fabric';
 import { Game } from './game';
 import Vec from 'fast-vector';
@@ -116,5 +117,5 @@ canvas.backgroundColor = '#333';
 
 let game = new Game(canvas);
 game.addBlock(new Cannon(new Vec(500, 500)));
-game.addEnemy(new SimpleEnemy(new Vec(100, 100), new Vec(1.1, 1)));
+game.addEnemy(new SimpleEnemy(new Vec(100, 100), Math.PI / 2.9));
 game.start();

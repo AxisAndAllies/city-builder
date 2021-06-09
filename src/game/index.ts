@@ -14,6 +14,7 @@ export class Game {
     timer: number;
   };
   readonly canvas: fabric.Canvas;
+  renderFunc: () => void;
 
   constructor(canvas: fabric.Canvas) {
     this.canvas = canvas;
@@ -24,9 +25,10 @@ export class Game {
       lastUpdated: Date.now(),
       timer: 0,
     };
+    this.renderFunc = this.render.bind(this);
   }
   start() {
-    requestAnimationFrame(this.render);
+    requestAnimationFrame(this.renderFunc);
 
     this.state.timer = setInterval(() => {
       let now = Date.now();
@@ -47,9 +49,6 @@ export class Game {
     shots.forEach((s) => this.canvas.add(s.sprite));
   }
 
-  /**
-   * @param {number} elapsedMs
-   */
   loop(elapsedMs: number) {
     this.state.blocks.forEach((s) => {
       if (s instanceof Weapon) {
@@ -57,6 +56,14 @@ export class Game {
       }
       s.tick(elapsedMs);
     });
+    this.state.enemies.forEach((e) => {
+      e.tick(elapsedMs);
+    });
+    this.state.shots.forEach((e) => {
+      e.tick(elapsedMs);
+    });
+    this.state.shots = this.state.shots.filter((s) => !s.isDead());
+    this.state.enemies = this.state.enemies.filter((s) => !s.isDead());
     this.state.blocks = this.state.blocks.filter((s) => !s.isDead());
   }
 
@@ -71,7 +78,8 @@ export class Game {
     this.state.enemies.map((e) => {
       e.render();
     });
-    window.requestAnimationFrame(this.render);
+    this.canvas.renderAll();
+    window.requestAnimationFrame(this.renderFunc);
   }
 
   exit() {

@@ -14,19 +14,19 @@ export abstract class Enemy {
     vel: Vec;
     pos: Vec;
   } & EnemyStat;
-  baseStat: EnemyStat = {
-    health: 0,
-    speed: 0,
-    damage: 0,
-  };
+  baseStat: EnemyStat;
   sprite: fabric.Object;
-  constructor(pos: Vec, vel: Vec) {
+  constructor(pos: Vec, angleRadians: number, baseStat: EnemyStat) {
+    const vel = new Vec(Math.cos(angleRadians), Math.sin(angleRadians)).mul(
+      baseStat.speed,
+    );
     this.state = {
       id: alphanumericId(8),
       vel,
       pos,
-      ...this.baseStat,
+      ...baseStat,
     };
+    this.baseStat = baseStat;
 
     this.sprite = new fabric.Rect({
       top: this.state.pos.x,
@@ -37,7 +37,8 @@ export abstract class Enemy {
     });
   }
   tick(ms: number) {
-    this.state.pos = this.state.pos.add(this.state.vel.div(ms / 1000));
+    // console.log(this.state.pos);
+    this.state.pos = this.state.pos.add(this.state.vel.mul(ms / 1000));
   }
   render() {
     this.sprite.set({ top: this.state.pos.x, left: this.state.pos.y });
@@ -48,9 +49,12 @@ export abstract class Enemy {
 }
 
 export class SimpleEnemy extends Enemy {
-  baseStat: EnemyStat = {
-    health: 10,
-    speed: 10,
-    damage: 10,
-  };
+  constructor(pos: Vec, angleRadians: number) {
+    let baseStat: EnemyStat = {
+      health: 10,
+      speed: 100,
+      damage: 10,
+    };
+    super(pos, angleRadians, baseStat);
+  }
 }

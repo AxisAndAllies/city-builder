@@ -24,25 +24,17 @@ export abstract class Weapon extends Block {
     target: Enemy | null;
   } & WeaponStat;
   // base stats
-  baseStat: WeaponStat = {
-    health: 0,
-    reload: 0,
-    damage: 0,
-    range: 0,
-    turnSpeed: 0,
-    bulletSpeed: 0,
-    spreadRadians: 0,
-    numShots: 0,
-  };
-  constructor(pos: Vec) {
+  baseStat: WeaponStat;
+  constructor(pos: Vec, baseStat: WeaponStat) {
     super(0, pos);
     this.state = {
       pos,
       orientation: 0,
       target: null,
-      ...this.baseStat,
+      ...baseStat,
       reload: 0, // all weapons come ready to fire
     };
+    this.baseStat = baseStat;
   }
 
   get readyToFire() {
@@ -129,16 +121,19 @@ export abstract class Weapon extends Block {
 }
 
 export class Cannon extends Weapon {
-  baseStat: WeaponStat = {
-    health: 10,
-    reload: 1000,
-    damage: 0,
-    range: 400,
-    turnSpeed: Math.PI / 2,
-    bulletSpeed: 50,
-    spreadRadians: Math.PI * 0.05,
-    numShots: 1,
-  };
+  constructor(pos: Vec) {
+    let baseStat: WeaponStat = {
+      health: 10,
+      reload: 1000,
+      damage: 0,
+      range: 400,
+      turnSpeed: Math.PI / 2,
+      bulletSpeed: 50,
+      spreadRadians: Math.PI * 0.05,
+      numShots: 1,
+    };
+    super(pos, baseStat);
+  }
 }
 
 // export class Laser extends Weapon {

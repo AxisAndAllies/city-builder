@@ -40,8 +40,11 @@ export abstract class Shot {
     });
   }
   tick(ms: number) {
-    this.state.pos = this.state.pos.add(this.state.vel.div(ms / 1000));
+    this.state.pos = this.state.pos.add(this.state.vel.mul(ms / 1000));
     this.state.lifespanMs -= ms;
+  }
+  isDead() {
+    return this.state.lifespanMs <= 0;
   }
   render() {
     this.sprite.set({ top: this.state.pos.x, left: this.state.pos.y });
