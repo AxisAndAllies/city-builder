@@ -69,25 +69,26 @@ export abstract class Weapon extends Block {
       return;
     }
     // shoot if aligned + in range + reloaded
-    let vec = getDiffVec(this.state.target, this);
+    let vec = getDiffVec(this, this.state.target);
+    this.turnTowards(vec.angle(), ms);
     if (
-      true
-      // Math.abs(vec.angle() - this.state.orientation) % 360 < 0.1 &&
-      // vec.magnitude() < this.state.range &&
-      // this.state.reload <= 0
+      // true
+      Math.abs(vec.angle() - this.state.orientation) % 360 < 0.1 &&
+      vec.magnitude() < this.state.range &&
+      this.state.reload <= 0
     ) {
       // console.log(this.id, " fired a shot at ", targ);
       return this.tryFire();
     }
   }
-  turnTowards(ang: number, ms: number) {
+  turnTowards(angRadians: number, ms: number) {
     // optimal turning algorithm
     // from https://math.stackexchange.com/questions/1366869/calculating-rotation-direction-between-two-angless
     let cur_ang = this.state.orientation;
     let turn = (this.state.turnSpeed * ms) / 1000;
-    let angdiff = cur_ang - ang;
-    if (angdiff > 180) angdiff -= 360;
-    if (angdiff <= -180) angdiff += 360;
+    let angdiff = cur_ang - angRadians;
+    if (angdiff > Math.PI) angdiff -= Math.PI * 2;
+    if (angdiff <= -Math.PI) angdiff += Math.PI * 2;
 
     let minturn = Math.min(Math.abs(angdiff), turn);
     if (angdiff > 0) {
@@ -121,6 +122,10 @@ export abstract class Weapon extends Block {
     // returns damage
     return shots;
   }
+  render() {
+    this.sprite.set({ left: this.state.pos.x, top: this.state.pos.y });
+    this.sprite.rotate((this.state.orientation * 180) / Math.PI);
+  }
 }
 
 export class Minigun extends Weapon {
@@ -138,9 +143,9 @@ export class Minigun extends Weapon {
     super(pos, baseStat);
 
     this.sprite = new fabric.Rect({
-      top: this.state.pos.x,
-      left: this.state.pos.y,
-      width: 30,
+      left: this.state.pos.x,
+      top: this.state.pos.y,
+      width: 25,
       height: 25,
       fill: '#e2a',
     });
@@ -161,8 +166,8 @@ export class Cannon extends Weapon {
     super(pos, baseStat);
 
     this.sprite = new fabric.Rect({
-      top: this.state.pos.x,
-      left: this.state.pos.y,
+      left: this.state.pos.x,
+      top: this.state.pos.y,
       width: 30,
       height: 45,
       fill: '#2ae',
@@ -185,10 +190,10 @@ export class Shotgun extends Weapon {
     super(pos, baseStat);
 
     this.sprite = new fabric.Rect({
-      top: this.state.pos.x,
-      left: this.state.pos.y,
-      width: 30,
-      height: 55,
+      left: this.state.pos.x,
+      top: this.state.pos.y,
+      width: 35,
+      height: 20,
       fill: '#bb2',
     });
   }

@@ -45,7 +45,7 @@ export abstract class Shot {
     return this.state.lifespanMs <= 0;
   }
   render() {
-    this.sprite.set({ top: this.state.pos.x, left: this.state.pos.y });
+    this.sprite.set({ left: this.state.pos.x, top: this.state.pos.y });
   }
 }
 export class Bullet extends Shot {

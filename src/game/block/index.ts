@@ -14,8 +14,8 @@ export abstract class Block {
     };
 
     this.sprite = new fabric.Rect({
-      top: this.state.pos.x,
-      left: this.state.pos.y,
+      left: this.state.pos.x,
+      top: this.state.pos.y,
       width: 40,
       height: 40,
       fill: '#4ea',
@@ -31,7 +31,7 @@ export abstract class Block {
     return;
   }
   render() {
-    this.sprite.set({ top: this.state.pos.x, left: this.state.pos.y });
+    this.sprite.set({ left: this.state.pos.x, top: this.state.pos.y });
   }
 }
 export class Wall extends Block {}
