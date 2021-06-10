@@ -31,8 +31,8 @@ export abstract class Enemy {
     this.sprite = new fabric.Rect({
       left: this.state.pos.x,
       top: this.state.pos.y,
-      width: 50,
-      height: 50,
+      width: 30,
+      height: 30,
       fill: '#aaa',
       hasControls: false,
       hasBorders: false,
@@ -40,11 +40,11 @@ export abstract class Enemy {
   }
   tick(ms: number) {
     // console.log(this.state.pos);
-    // this.state.pos = this.state.pos.add(this.state.vel.mul(ms / 1000));
-    this.state.pos = new Vec(this.sprite?.left, this.sprite?.top);
+    this.state.pos = this.state.pos.add(this.state.vel.mul(ms / 1000));
+    // this.state.pos = new Vec(this.sprite?.left, this.sprite?.top);
   }
   render() {
-    // this.sprite.set({ left: this.state.pos.x, top: this.state.pos.y });
+    this.sprite.set({ left: this.state.pos.x, top: this.state.pos.y });
   }
   isDead() {
     return this.state.health <= 0;

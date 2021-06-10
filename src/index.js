@@ -3,7 +3,7 @@ import { fabric } from 'fabric';
 import { Game } from './game';
 import Vec from 'fast-vector';
 import { Cannon, Minigun, Shotgun } from './game/block/weapon';
-import { SimpleEnemy } from './game/enemy';
+import { SimpleEnemy, SmallEnemy } from './game/enemy';
 import { Resource, ResourceType } from './game/block/resource';
 import { Wall } from './game/block';
 
@@ -133,10 +133,11 @@ game.addBlock(new Minigun(new Vec(300, 300)));
 game.addBlock(new Minigun(new Vec(400, 200)));
 game.addBlock(new Minigun(new Vec(600, 700)));
 game.addBlock(new Shotgun(new Vec(400, 600)));
+
 for (let i = 0; i < 30; i++) {
-  game.addBlock(new Wall(10, new Vec(i * GRID_SIZE + 20, 700)));
-  game.addBlock(new Wall(10, new Vec(i * GRID_SIZE + 200, 500)));
-  game.addBlock(new Wall(10, new Vec(i * GRID_SIZE + 500, 300)));
+  game.addBlock(new Wall(new Vec(i * GRID_SIZE + 20, 700)));
+  game.addBlock(new Wall(new Vec(i * GRID_SIZE + 200, 500)));
+  game.addBlock(new Wall(new Vec(i * GRID_SIZE + 500, 300)));
 }
 for (let i = 0; i < 10; i++) {
   let x = Math.round((Math.random() * WIDTH) / GRID_SIZE) * GRID_SIZE;
@@ -149,4 +150,6 @@ for (let i = 0; i < 10; i++) {
   }
 }
 game.addEnemy(new SimpleEnemy(new Vec(100, 100), Math.PI / 2.9));
+game.addEnemy(new SmallEnemy(new Vec(100, 700), -Math.PI / 2.9));
+game.addEnemy(new SmallEnemy(new Vec(700, 100), -Math.PI * 1.5));
 game.start();

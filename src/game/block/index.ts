@@ -19,7 +19,7 @@ export abstract class Block {
       top: this.state.pos.y,
       width: GRID_SIZE,
       height: GRID_SIZE,
-      fill: 'white',
+      fill: 'lightgray',
     });
   }
   takeDamage(dmg: number) {
@@ -39,7 +39,12 @@ export abstract class Block {
     });
   }
 }
-export class Wall extends Block {}
+export class Wall extends Block {
+  constructor(pos: Vec) {
+    super(10, pos);
+    this.sprite.selectable = false;
+  }
+}
 
 export class PowerBlock extends Block {}
 // export * from './weapon';

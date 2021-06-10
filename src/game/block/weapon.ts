@@ -65,16 +65,20 @@ export abstract class Weapon extends Block {
   tick(ms: number) {
     this.state.reload = Math.max(this.state.reload - ms, 0);
 
-    if (!this.state.target) {
+    let targ = this.state.target;
+
+    if (!targ) {
       return;
     }
+    let vec = getDiffVec(this, targ);
+    // aim ahead of target
+    let estTime = vec.magnitude() / this.state.bulletSpeed;
+    let aimPoint = vec.add(targ.state.vel.mul(estTime));
+    this.turnTowards(aimPoint.angle(), ms);
     // shoot if aligned + in range + reloaded
-    let vec = getDiffVec(this, this.state.target);
-    this.turnTowards(vec.angle(), ms);
     if (
-      // true
-      Math.abs(vec.angle() - this.state.orientation) % TWO_PI < 0.1 &&
-      vec.magnitude() < this.state.range &&
+      Math.abs(aimPoint.angle() - this.state.orientation) % TWO_PI < 0.04 &&
+      aimPoint.magnitude() < this.state.range &&
       this.state.reload <= 0
     ) {
       // console.log(this.id, " fired a shot at ", targ);
@@ -135,7 +139,7 @@ export class Minigun extends Weapon {
       reload: 200,
       damage: 2,
       range: 850, // 250
-      turnSpeed: Math.PI / 2,
+      turnSpeed: Math.PI * 0.7,
       bulletSpeed: 270,
       spreadRadians: 0.15,
       numShots: 1,
@@ -159,7 +163,7 @@ export class Cannon extends Weapon {
       reload: 1000,
       damage: 10,
       range: 400,
-      turnSpeed: Math.PI / 2,
+      turnSpeed: Math.PI * 0.9,
       bulletSpeed: 300,
       spreadRadians: 0.05,
       numShots: 1,
@@ -170,7 +174,7 @@ export class Cannon extends Weapon {
       left: this.state.pos.x,
       top: this.state.pos.y,
       width: 30,
-      height: 45,
+      height: 25,
       fill: '#2ae',
     });
     this.sprite.selectable = false;
