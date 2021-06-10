@@ -34,6 +34,8 @@ export abstract class Enemy {
       width: 50,
       height: 50,
       fill: '#aaa',
+      hasControls: false,
+      hasBorders: false,
     });
   }
   tick(ms: number) {

@@ -21,5 +21,6 @@ export class Resource extends Block {
       height: GRID_SIZE,
       fill: '#4ea',
     });
+    this.sprite.selectable = false;
   }
 }

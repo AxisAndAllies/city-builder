@@ -11,7 +11,12 @@ const HEIGHT = 1200;
 export const GRID_SIZE = 20;
 
 let canvas = new fabric.Canvas('canvas', { width: WIDTH, height: HEIGHT });
+// perf things
 canvas.selection = false;
+canvas.skipOffscreen = true;
+// canvas.skipTargetFind = true;
+canvas.renderOnAddRemove = false;
+
 canvas.on('mouse:wheel', function (opt) {
   let delta = opt.e.deltaY;
   let zoom = canvas.getZoom();
@@ -21,36 +26,6 @@ canvas.on('mouse:wheel', function (opt) {
   canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
   opt.e.preventDefault();
   opt.e.stopPropagation();
-});
-
-canvas.on('mouse:down', function (opt) {
-  let evt = opt.e;
-  opt.e.preventDefault();
-  opt.e.stopPropagation();
-  if (evt.altKey === true) {
-    this.isDragging = true;
-    this.selection = false;
-    this.lastPosX = evt.clientX;
-    this.lastPosY = evt.clientY;
-  }
-});
-canvas.on('mouse:move', function (opt) {
-  if (this.isDragging) {
-    let e = opt.e;
-    let vpt = this.viewportTransform;
-    vpt[4] += e.clientX - this.lastPosX;
-    vpt[5] += e.clientY - this.lastPosY;
-    this.requestRenderAll();
-    this.lastPosX = e.clientX;
-    this.lastPosY = e.clientY;
-  }
-});
-canvas.on('mouse:up', function (opt) {
-  // on mouse up we want to recalculate new interaction
-  // for all objects, so we call setViewportTransform
-  this.setViewportTransform(this.viewportTransform);
-  this.isDragging = false;
-  this.selection = true;
 });
 
 let rect = new fabric.Rect({
@@ -69,8 +44,6 @@ let r2 = new fabric.Rect({
   fill: '#4ea',
   // selectable: false,
 });
-
-console.log(rect.originX, rect.originY);
 
 function makeLaser(r1, r2) {
   let line = new fabric.Line(
@@ -121,8 +94,43 @@ let text = new fabric.Text('Hello world', {
 canvas.backgroundColor = '#333';
 
 let game = new Game(canvas);
+
+canvas.on('mouse:down', function (opt) {
+  let evt = opt.e;
+  opt.e.preventDefault();
+  opt.e.stopPropagation();
+  if (evt.altKey === true) {
+    this.isDragging = true;
+    this.selection = false;
+    this.lastPosX = evt.clientX;
+    this.lastPosY = evt.clientY;
+  }
+});
+canvas.on('mouse:move', function (opt) {
+  if (this.isDragging) {
+    let e = opt.e;
+    let vpt = this.viewportTransform;
+    vpt[4] += e.clientX - this.lastPosX;
+    vpt[5] += e.clientY - this.lastPosY;
+    this.requestRenderAll();
+    this.lastPosX = e.clientX;
+    this.lastPosY = e.clientY;
+  }
+});
+canvas.on('mouse:up', function (opt) {
+  // on mouse up we want to recalculate new interaction
+  // for all objects, so we call setViewportTransform
+  this.setViewportTransform(this.viewportTransform);
+  this.isDragging = false;
+  this.selection = true;
+});
+
 game.addBlock(new Cannon(new Vec(500, 500)));
 game.addBlock(new Minigun(new Vec(600, 300)));
+game.addBlock(new Minigun(new Vec(200, 300)));
+game.addBlock(new Minigun(new Vec(300, 300)));
+game.addBlock(new Minigun(new Vec(400, 200)));
+game.addBlock(new Minigun(new Vec(600, 700)));
 game.addBlock(new Shotgun(new Vec(400, 600)));
 for (let i = 0; i < 10; i++) {
   let x = Math.round((Math.random() * WIDTH) / GRID_SIZE) * GRID_SIZE;

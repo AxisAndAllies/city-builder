@@ -35,6 +35,7 @@ export abstract class Shot {
       height: 12,
       fill: '#e92',
     });
+    this.sprite.selectable = false;
   }
   tick(ms: number) {
     this.state.pos = this.state.pos.add(this.state.vel.mul(ms / 1000));
@@ -44,7 +45,11 @@ export abstract class Shot {
     return this.state.lifespanMs <= 0;
   }
   render() {
-    this.sprite.set({ left: this.state.pos.x, top: this.state.pos.y });
+    this.sprite.set({
+      // int values for better perf
+      left: Math.floor(this.state.pos.x),
+      top: Math.floor(this.state.pos.y),
+    });
   }
 }
 export class Bullet extends Shot {

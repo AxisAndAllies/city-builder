@@ -84,13 +84,13 @@ export class Game {
     this.state.blocks.map((b) => {
       b.render();
     });
-    this.state.shots.map((s) => {
-      s.render();
-    });
+    for (let i = 0; i < this.state.shots.length; i++) {
+      this.state.shots[i].render();
+    }
     this.state.enemies.map((e) => {
       e.render();
     });
-    this.canvas.renderAll();
+    this.canvas.requestRenderAll();
     window.requestAnimationFrame(this.renderFunc);
   }
 

@@ -134,7 +134,7 @@ export class Minigun extends Weapon {
       health: 10,
       reload: 200,
       damage: 2,
-      range: 250,
+      range: 850, // 250
       turnSpeed: Math.PI / 2,
       bulletSpeed: 150,
       spreadRadians: 0.15,
@@ -149,6 +149,7 @@ export class Minigun extends Weapon {
       height: 25,
       fill: '#e2a',
     });
+    this.sprite.selectable = false;
   }
 }
 export class Cannon extends Weapon {
@@ -172,6 +173,7 @@ export class Cannon extends Weapon {
       height: 45,
       fill: '#2ae',
     });
+    this.sprite.selectable = false;
   }
 }
 
@@ -196,6 +198,7 @@ export class Shotgun extends Weapon {
       height: 20,
       fill: '#bb2',
     });
+    this.sprite.selectable = false;
   }
 }
 

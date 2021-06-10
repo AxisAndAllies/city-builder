@@ -31,7 +31,11 @@ export abstract class Block {
     return;
   }
   render() {
-    this.sprite.set({ left: this.state.pos.x, top: this.state.pos.y });
+    this.sprite.set({
+      // int values for better perf
+      left: Math.floor(this.state.pos.x),
+      top: Math.floor(this.state.pos.y),
+    });
   }
 }
 export class Wall extends Block {}
