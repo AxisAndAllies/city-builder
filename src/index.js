@@ -17,34 +17,8 @@ canvas.selection = false;
 canvas.skipOffscreen = true;
 // canvas.skipTargetFind = true;
 canvas.renderOnAddRemove = false;
-
-canvas.on('mouse:wheel', function (opt) {
-  let delta = opt.e.deltaY;
-  let zoom = canvas.getZoom();
-  zoom *= 0.999 ** delta;
-  if (zoom > 20) zoom = 20;
-  if (zoom < 0.01) zoom = 0.01;
-  canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
-  opt.e.preventDefault();
-  opt.e.stopPropagation();
-});
-
-let rect = new fabric.Rect({
-  top: 100,
-  left: 100,
-  width: 90,
-  height: 40,
-  fill: '#a3e',
-  // selectable: false,
-});
-let r2 = new fabric.Rect({
-  top: 400,
-  left: 400,
-  width: 90,
-  height: 40,
-  fill: '#4ea',
-  // selectable: false,
-});
+canvas.fireMiddleClick = true;
+canvas.fireRightClick = true;
 
 function makeLaser(r1, r2) {
   let line = new fabric.Line(
@@ -94,17 +68,45 @@ let text = new fabric.Text('Hello world', {
 // canvas.add(makeLaser(r2, rect));
 canvas.backgroundColor = '#333';
 
-let game = new Game(canvas);
+export const roundToGrid = (x, y) => {
+  return new Vec(
+    Math.round(x / GRID_SIZE) * GRID_SIZE,
+    Math.round(y / GRID_SIZE) * GRID_SIZE,
+  );
+};
 
+let game = new Game(canvas);
+canvas.on('mouse:wheel', function (opt) {
+  let delta = opt.e.deltaY;
+  let zoom = canvas.getZoom();
+  zoom *= 0.999 ** delta;
+  if (zoom > 20) zoom = 20;
+  if (zoom < 0.01) zoom = 0.01;
+  canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
+  opt.e.preventDefault();
+  opt.e.stopPropagation();
+});
 canvas.on('mouse:down', function (opt) {
   let evt = opt.e;
   opt.e.preventDefault();
   opt.e.stopPropagation();
-  if (evt.altKey === true) {
+  if (opt.button === 2) {
+    // middle click drag
     this.isDragging = true;
     this.selection = false;
     this.lastPosX = evt.clientX;
     this.lastPosY = evt.clientY;
+  } else if (opt.button === 1) {
+    // left click
+    let realX = opt.e.offsetX - this.viewportTransform[4];
+    let realY = opt.e.offsetY - this.viewportTransform[5];
+    console.log(realX, realY, roundToGrid(realX, realY));
+    game.addBlock(
+      new Wall(
+        // need to subtract a bit to make it seem like it's added directly under the mouse
+        roundToGrid(realX, realY).sub(new Vec(GRID_SIZE, 2 * GRID_SIZE)),
+      ),
+    );
   }
 });
 canvas.on('mouse:move', function (opt) {
@@ -140,12 +142,12 @@ for (let i = 0; i < 30; i++) {
   game.addBlock(new Wall(new Vec(i * GRID_SIZE + 500, 300)));
 }
 for (let i = 0; i < 10; i++) {
-  let x = Math.round((Math.random() * WIDTH) / GRID_SIZE) * GRID_SIZE;
-  let y = Math.round((Math.random() * HEIGHT) / GRID_SIZE) * GRID_SIZE;
-  game.addBlock(new Resource(new Vec(x, y), 10, ResourceType.IRON));
+  let x = Math.random() * WIDTH;
+  let y = Math.random() * HEIGHT;
+  game.addBlock(new Resource(roundToGrid(x, y), 10, ResourceType.IRON));
   for (let j = 0; j < Math.random() * 20; j++) {
-    let x2 = Math.round((Math.random() * 150 - 75) / GRID_SIZE) * GRID_SIZE + x;
-    let y2 = Math.round((Math.random() * 150 - 75) / GRID_SIZE) * GRID_SIZE + y;
+    let x2 = Math.random() * 150 - 75 + x;
+    let y2 = Math.random() * 150 - 75 + y;
     game.addBlock(new Resource(new Vec(x2, y2), 10, ResourceType.IRON));
   }
 }
