@@ -20,49 +20,51 @@ canvas.renderOnAddRemove = false;
 canvas.fireMiddleClick = true;
 canvas.fireRightClick = true;
 
-function makeLaser(r1, r2) {
-  let line = new fabric.Line(
-    [
-      r1.getCenterPoint().x,
-      r1.getCenterPoint().y,
-      r2.getCenterPoint().x,
-      r2.getCenterPoint().y,
-    ],
-    {
-      fill: 'red',
-      stroke: 'red',
-      strokeWidth: 2,
-      selectable: false,
-      evented: false,
-    },
-  );
-  let gradient = new fabric.Gradient({
-    type: 'linear',
-    gradientUnits: 'percentage', // or 'percentage'
-    coords: { x1: 0, y1: 0, x2: 0, y2: 2 },
-    colorStops: [
-      { offset: 0, color: r1.fill },
-      { offset: 0.5, color: 'yellow' },
-    ],
-  });
-  line.set('stroke', gradient);
-  return line;
-}
-
-let text = new fabric.Text('Hello world', {
-  left: 100,
-  top: 200,
-  fill: '#f55',
-  fontFamily: 'Ubuntu',
-  fontWeight: 'bold',
-  fontStyle: 'italic',
-  fontSize: 12,
-  // angle: 15,
-  selectable: false,
-});
-
 canvas.backgroundColor = '#333';
-canvas.hoverCursor = 'none';
+// canvas.hoverCursor = 'none';
+// canvas.setCursor('none');
+canvas.defaultCursor = 'none';
+
+// function makeLaser(r1, r2) {
+//   let line = new fabric.Line(
+//     [
+//       r1.getCenterPoint().x,
+//       r1.getCenterPoint().y,
+//       r2.getCenterPoint().x,
+//       r2.getCenterPoint().y,
+//     ],
+//     {
+//       fill: 'red',
+//       stroke: 'red',
+//       strokeWidth: 2,
+//       selectable: false,
+//       evented: false,
+//     },
+//   );
+//   let gradient = new fabric.Gradient({
+//     type: 'linear',
+//     gradientUnits: 'percentage', // or 'percentage'
+//     coords: { x1: 0, y1: 0, x2: 0, y2: 2 },
+//     colorStops: [
+//       { offset: 0, color: r1.fill },
+//       { offset: 0.5, color: 'yellow' },
+//     ],
+//   });
+//   line.set('stroke', gradient);
+//   return line;
+// }
+
+// let text = new fabric.Text('Hello world', {
+//   left: 100,
+//   top: 200,
+//   fill: '#f55',
+//   fontFamily: 'Ubuntu',
+//   fontWeight: 'bold',
+//   fontStyle: 'italic',
+//   fontSize: 12,
+//   // angle: 15,
+//   selectable: false,
+// });
 
 export const roundToGrid = (x, y) => {
   return new Vec(
