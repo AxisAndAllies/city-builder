@@ -60,13 +60,9 @@ let text = new fabric.Text('Hello world', {
   // angle: 15,
   selectable: false,
 });
-// canvas.add(text);
 
-// canvas.add(rect);
-// canvas.add(r2);
-// canvas.add(makeLaser(rect, r2));
-// canvas.add(makeLaser(r2, rect));
 canvas.backgroundColor = '#333';
+canvas.hoverCursor = 'none';
 
 export const roundToGrid = (x, y) => {
   return new Vec(
@@ -75,13 +71,33 @@ export const roundToGrid = (x, y) => {
   );
 };
 
+let cursor = new fabric.Rect({
+  left: 0,
+  top: 0,
+  stroke: 'white',
+  width: GRID_SIZE,
+  height: GRID_SIZE,
+  selectable: false,
+  hasRotatingPoint: false,
+});
+canvas.add(cursor);
+
 let game = new Game(canvas);
+
+function calcPlacement(offsetX, offsetY, viewportTransform, zoom) {
+  let realX = offsetX - viewportTransform[4];
+  let realY = offsetY - viewportTransform[5];
+  return roundToGrid(realX / zoom, realY / zoom);
+}
 canvas.on('mouse:wheel', function (opt) {
+  if (!opt.e.shiftKey) {
+    return;
+  }
   let delta = opt.e.deltaY;
   let zoom = canvas.getZoom();
   zoom *= 0.999 ** delta;
-  if (zoom > 20) zoom = 20;
-  if (zoom < 0.01) zoom = 0.01;
+  if (zoom > 5) zoom = 5;
+  if (zoom < 0.2) zoom = 0.2;
   canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
   opt.e.preventDefault();
   opt.e.stopPropagation();
@@ -98,13 +114,18 @@ canvas.on('mouse:down', function (opt) {
     this.lastPosY = evt.clientY;
   } else if (opt.button === 1) {
     // left click
-    let realX = opt.e.offsetX - this.viewportTransform[4];
-    let realY = opt.e.offsetY - this.viewportTransform[5];
-    console.log(realX, realY, roundToGrid(realX, realY));
+
+    let placement = calcPlacement(
+      opt.e.offsetX,
+      opt.e.offsetY,
+      this.viewportTransform,
+      canvas.getZoom(),
+    ).sub(new Vec(0, 2 * GRID_SIZE));
+
     game.addBlock(
       new Wall(
         // need to subtract a bit to make it seem like it's added directly under the mouse
-        roundToGrid(realX, realY).sub(new Vec(GRID_SIZE, 2 * GRID_SIZE)),
+        placement,
       ),
     );
   }
@@ -118,6 +139,14 @@ canvas.on('mouse:move', function (opt) {
     this.requestRenderAll();
     this.lastPosX = e.clientX;
     this.lastPosY = e.clientY;
+  } else {
+    let placement = calcPlacement(
+      opt.e.offsetX,
+      opt.e.offsetY,
+      this.viewportTransform,
+      canvas.getZoom(),
+    ).sub(new Vec(0, 2 * GRID_SIZE));
+    cursor.set({ left: placement.x, top: placement.y });
   }
 });
 canvas.on('mouse:up', function (opt) {
@@ -148,7 +177,7 @@ for (let i = 0; i < 10; i++) {
   for (let j = 0; j < Math.random() * 20; j++) {
     let x2 = Math.random() * 150 - 75 + x;
     let y2 = Math.random() * 150 - 75 + y;
-    game.addBlock(new Resource(new Vec(x2, y2), 10, ResourceType.IRON));
+    game.addBlock(new Resource(roundToGrid(x2, y2), 10, ResourceType.IRON));
   }
 }
 game.addEnemy(new SimpleEnemy(new Vec(100, 100), Math.PI / 2.9));
