@@ -136,7 +136,7 @@ export class Minigun extends Weapon {
       damage: 2,
       range: 850, // 250
       turnSpeed: Math.PI / 2,
-      bulletSpeed: 150,
+      bulletSpeed: 270,
       spreadRadians: 0.15,
       numShots: 1,
     };
@@ -160,7 +160,7 @@ export class Cannon extends Weapon {
       damage: 10,
       range: 400,
       turnSpeed: Math.PI / 2,
-      bulletSpeed: 80,
+      bulletSpeed: 300,
       spreadRadians: 0.05,
       numShots: 1,
     };
@@ -185,7 +185,7 @@ export class Shotgun extends Weapon {
       damage: 4,
       range: 240,
       turnSpeed: Math.PI * 0.7,
-      bulletSpeed: 220,
+      bulletSpeed: 420,
       spreadRadians: 0.5,
       numShots: 9,
     };

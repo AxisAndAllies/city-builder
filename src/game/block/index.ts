@@ -1,5 +1,6 @@
 import { fabric } from 'fabric';
 import Vec from 'fast-vector';
+import { GRID_SIZE } from '../..';
 
 export abstract class Block {
   state: {
@@ -16,8 +17,8 @@ export abstract class Block {
     this.sprite = new fabric.Rect({
       left: this.state.pos.x,
       top: this.state.pos.y,
-      width: 10,
-      height: 10,
+      width: GRID_SIZE,
+      height: GRID_SIZE,
       fill: 'white',
     });
   }

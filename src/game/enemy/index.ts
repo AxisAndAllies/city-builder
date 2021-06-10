@@ -61,3 +61,23 @@ export class SimpleEnemy extends Enemy {
     super(pos, angleRadians, baseStat);
   }
 }
+
+export class SmallEnemy extends Enemy {
+  constructor(pos: Vec, angleRadians: number) {
+    let baseStat: EnemyStat = {
+      health: 10,
+      speed: 50,
+      damage: 10,
+    };
+    super(pos, angleRadians, baseStat);
+    this.sprite = new fabric.Rect({
+      left: this.state.pos.x,
+      top: this.state.pos.y,
+      width: 20,
+      height: 20,
+      fill: '#e92',
+      hasControls: false,
+      hasBorders: false,
+    });
+  }
+}

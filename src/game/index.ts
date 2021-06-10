@@ -3,6 +3,8 @@ import { Weapon } from './block/weapon';
 import { Enemy } from './enemy';
 import { fabric } from 'fabric';
 import { Shot } from './shot';
+// turn off caching for 3x perf increase, since rapidly moving objs invalidate cache often.
+fabric.Object.prototype.objectCaching = false;
 
 //@ts-check
 export class Game {

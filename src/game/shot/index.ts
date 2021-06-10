@@ -3,9 +3,11 @@ import { fabric } from 'fabric';
 
 export enum ShotType {
   BULLET,
+  CANNONBALL,
 }
 const dmgStat = {
   [ShotType.BULLET]: 5,
+  [ShotType.CANNONBALL]: 10,
 };
 
 export abstract class Shot {
@@ -29,11 +31,12 @@ export abstract class Shot {
     };
 
     this.sprite = new fabric.Rect({
-      top: this.state.pos.x,
-      left: this.state.pos.y,
-      width: 12,
-      height: 12,
-      fill: '#e92',
+      left: this.state.pos.x,
+      top: this.state.pos.y,
+      width: 16,
+      height: 4,
+      fill: 'yellow',
+      angle: (angleRadians * 180) / Math.PI,
     });
     this.sprite.selectable = false;
   }
@@ -60,5 +63,25 @@ export class Bullet extends Shot {
     speed: number,
   ) {
     super(initialPos, angleRadians, lifespanMs, speed, ShotType.BULLET);
+  }
+}
+
+export class CannonBall extends Shot {
+  constructor(
+    initialPos: Vec,
+    angleRadians: number,
+    lifespanMs: number,
+    speed: number,
+  ) {
+    super(initialPos, angleRadians, lifespanMs, speed, ShotType.CANNONBALL);
+    this.sprite = new fabric.Rect({
+      top: this.state.pos.x,
+      left: this.state.pos.y,
+      width: 14,
+      height: 14,
+      fill: 'salmon',
+      angle: (angleRadians * 180) / Math.PI,
+    });
+    this.sprite.selectable = false;
   }
 }

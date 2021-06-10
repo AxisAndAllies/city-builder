@@ -5,6 +5,7 @@ import Vec from 'fast-vector';
 import { Cannon, Minigun, Shotgun } from './game/block/weapon';
 import { SimpleEnemy } from './game/enemy';
 import { Resource, ResourceType } from './game/block/resource';
+import { Wall } from './game/block';
 
 const WIDTH = 1600;
 const HEIGHT = 1200;
@@ -132,6 +133,11 @@ game.addBlock(new Minigun(new Vec(300, 300)));
 game.addBlock(new Minigun(new Vec(400, 200)));
 game.addBlock(new Minigun(new Vec(600, 700)));
 game.addBlock(new Shotgun(new Vec(400, 600)));
+for (let i = 0; i < 30; i++) {
+  game.addBlock(new Wall(10, new Vec(i * GRID_SIZE + 20, 700)));
+  game.addBlock(new Wall(10, new Vec(i * GRID_SIZE + 200, 500)));
+  game.addBlock(new Wall(10, new Vec(i * GRID_SIZE + 500, 300)));
+}
 for (let i = 0; i < 10; i++) {
   let x = Math.round((Math.random() * WIDTH) / GRID_SIZE) * GRID_SIZE;
   let y = Math.round((Math.random() * HEIGHT) / GRID_SIZE) * GRID_SIZE;
